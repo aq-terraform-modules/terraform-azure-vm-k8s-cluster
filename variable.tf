@@ -67,3 +67,9 @@ variable "admin_username" {
 variable "ssh_public_key" {
   description = "Public key for SSH"
 }
+
+
+variable "vm_worker_count" {
+  description = "Number of worker VMs"
+  default = 2
+}
