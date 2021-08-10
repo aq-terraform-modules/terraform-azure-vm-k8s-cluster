@@ -76,9 +76,7 @@ variable "vm_worker_count" {
 variable "tags" {
   description = "Tag for resources"
   type = map(any)
-  default = {
-    environment = "dev"
-  }
+  default = {}
 }
 
 variable "zones" {
