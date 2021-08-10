@@ -30,7 +30,7 @@ resource "azurerm_network_interface" "master_nic" {
 }
 
 resource "azurerm_virtual_machine" "master_vm" {
-  name                             = "${var.vm_name}-master-vm"
+  name                             = "${var.vm_name}-master"
   resource_group_name              = azurerm_resource_group.k8s_rg.name
   location                         = var.location
   network_interface_ids            = [azurerm_network_interface.master_nic.id]
@@ -98,7 +98,7 @@ resource "azurerm_network_interface" "worker_nic" {
 
 resource "azurerm_virtual_machine" "worker_vm" {
   count                            = var.vm_worker_count
-  name                             = "${var.vm_name}-worker${count.index}-vm"
+  name                             = "${var.vm_name}-worker${count.index}"
   resource_group_name              = azurerm_resource_group.k8s_rg.name
   location                         = var.location
   network_interface_ids            = [azurerm_network_interface.worker_nic[count.index].id]
