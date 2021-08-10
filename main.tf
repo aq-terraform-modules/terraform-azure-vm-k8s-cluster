@@ -2,6 +2,8 @@ resource "azurerm_resource_group" "k8s_rg" {
   name     = var.resource_group_name
   location = var.location
 
+  tags = var.tags
+
   lifecycle {
     ignore_changes = [tags]
   }
@@ -19,6 +21,8 @@ resource "azurerm_network_interface" "master_nic" {
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = var.private_ip_address_allocation
   }
+
+  tags = var.tags
 
   lifecycle {
     ignore_changes = [tags]
@@ -62,8 +66,12 @@ resource "azurerm_virtual_machine" "master_vm" {
     }
   }
 
+  zones = var.zones
+
+  tags = var.tags
+
   lifecycle {
-    ignore_changes = [tags, storage_image_reference]
+    ignore_changes = [tags, storage_image_reference, zones]
   }
 }
 
@@ -80,6 +88,8 @@ resource "azurerm_network_interface" "worker_nic" {
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = var.private_ip_address_allocation
   }
+
+  tags = var.tags
 
   lifecycle {
     ignore_changes = [tags]
@@ -123,6 +133,10 @@ resource "azurerm_virtual_machine" "worker_vm" {
       key_data = var.ssh_public_key
     }
   }
+
+  zones = var.zones
+
+  tags = var.tags
 
   lifecycle {
     ignore_changes = [tags, storage_image_reference]
