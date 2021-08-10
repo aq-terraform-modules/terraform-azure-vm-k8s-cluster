@@ -75,12 +75,12 @@ variable "vm_worker_count" {
 
 variable "tags" {
   description = "Tag for resources"
-  type = map(any)
-  default = {}
+  type        = map(any)
+  default     = {}
 }
 
 variable "zones" {
   description = "Availability Zones for the VM"
-  type = list(any)
-  default = []
+  type        = list(any)
+  default     = []
 }
