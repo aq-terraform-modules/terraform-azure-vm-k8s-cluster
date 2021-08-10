@@ -73,7 +73,7 @@ variable "vm_worker_count" {
   default     = 2
 }
 
-variable "tag" {
+variable "tags" {
   description = "Tag for resources"
   type = map(any)
   default = {}
