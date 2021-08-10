@@ -1,3 +1,7 @@
+# Other directories
+**/.devcontainer/*
+**/.vscode/*
+
 # Local .terraform directories
 **/.terraform/*
 

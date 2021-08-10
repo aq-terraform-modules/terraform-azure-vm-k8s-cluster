@@ -12,8 +12,8 @@ variable "vm_name" {
 
 variable "enable_accelerated_networking" {
   description = "Enable accelerated networking or not"
-  type = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "subnet_id" {
@@ -22,37 +22,37 @@ variable "subnet_id" {
 
 variable "private_ip_address_allocation" {
   description = "Type of address allocation"
-  default = "Dynamic"
+  default     = "Dynamic"
 }
 
 variable "vm_size" {
   description = "Default size of the VM"
-  default = "Standard_B2s"
+  default     = "Standard_B2s"
 }
 
 variable "os_image_id" {
   description = "ID of the custom OS image"
-  default = ""
+  default     = ""
 }
 
 variable "os_image_publisher" {
   description = "Publisher of the OS image"
-  default = "Canonical"
+  default     = "Canonical"
 }
 
 variable "os_image_offer" {
   description = "Offer of the OS image"
-  default = "0001-com-ubuntu-server-focal"
+  default     = "0001-com-ubuntu-server-focal"
 }
 
 variable "os_image_sku" {
   description = "SKU of the OS image"
-  default = "20_04-lts-gen2"
+  default     = "20_04-lts-gen2"
 }
 
 variable "os_image_version" {
   description = "Version of the OS image"
-  default = "latest"
+  default     = "latest"
 }
 
 variable "os_disk_type" {
@@ -68,8 +68,7 @@ variable "ssh_public_key" {
   description = "Public key for SSH"
 }
 
-
 variable "vm_worker_count" {
   description = "Number of worker VMs"
-  default = 2
+  default     = 2
 }
