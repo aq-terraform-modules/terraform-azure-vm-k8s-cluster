@@ -66,8 +66,7 @@ resource "azurerm_virtual_machine" "master_vm" {
   }
 
   zones = var.zones
-
-  tags = var.tags
+  tags  = var.tags
 
   lifecycle {
     ignore_changes = [tags, storage_image_reference, zones]
@@ -134,8 +133,7 @@ resource "azurerm_virtual_machine" "worker_vm" {
   }
 
   zones = var.zones
-
-  tags = var.tags
+  tags  = var.tags
 
   lifecycle {
     ignore_changes = [tags, storage_image_reference]
