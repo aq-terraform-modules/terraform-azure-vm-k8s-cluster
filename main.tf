@@ -8,15 +8,15 @@ resource "azurerm_resource_group" "k8s_rg" {
   }
 }
 
-resource "azurerm_network_interface" "master_nic" {
-  name                          = "${var.vm_name}-master-nic"
+resource "azurerm_network_interface" "controller_nic" {
+  name                          = "controller-nic"
   resource_group_name           = azurerm_resource_group.k8s_rg.name
   location                      = var.location
-  internal_dns_name_label       = "${var.vm_name}-master"
+  internal_dns_name_label       = "controller"
   enable_accelerated_networking = var.enable_accelerated_networking
 
   ip_configuration {
-    name                          = "${var.vm_name}-master-ipconf"
+    name                          = "controller-ipconf"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = var.private_ip_address_allocation
   }
@@ -28,11 +28,11 @@ resource "azurerm_network_interface" "master_nic" {
   }
 }
 
-resource "azurerm_virtual_machine" "master_vm" {
-  name                             = "${var.vm_name}-master"
+resource "azurerm_virtual_machine" "controller_vm" {
+  name                             = "controller"
   resource_group_name              = azurerm_resource_group.k8s_rg.name
   location                         = var.location
-  network_interface_ids            = [azurerm_network_interface.master_nic.id]
+  network_interface_ids            = [azurerm_network_interface.controller_nic.id]
   vm_size                          = var.vm_size
   delete_os_disk_on_termination    = true
   delete_data_disks_on_termination = true
@@ -46,14 +46,14 @@ resource "azurerm_virtual_machine" "master_vm" {
   }
 
   storage_os_disk {
-    name              = "${var.vm_name}-master-osdisk"
+    name              = "controller-osdisk"
     create_option     = "FromImage"
     caching           = "ReadWrite"
     managed_disk_type = var.os_disk_type
   }
 
   os_profile {
-    computer_name  = "${var.vm_name}-master"
+    computer_name  = "controller"
     admin_username = var.admin_username
   }
 
@@ -75,14 +75,14 @@ resource "azurerm_virtual_machine" "master_vm" {
 
 resource "azurerm_network_interface" "worker_nic" {
   count                         = var.vm_worker_count
-  name                          = "${var.vm_name}-worker${count.index}-nic"
+  name                          = "worker${count.index}-nic"
   resource_group_name           = azurerm_resource_group.k8s_rg.name
   location                      = var.location
-  internal_dns_name_label       = "${var.vm_name}-worker${count.index}"
+  internal_dns_name_label       = "worker${count.index}"
   enable_accelerated_networking = var.enable_accelerated_networking
 
   ip_configuration {
-    name                          = "${var.vm_name}-worker${count.index}-ipconf"
+    name                          = "worker${count.index}-ipconf"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = var.private_ip_address_allocation
   }
@@ -96,7 +96,7 @@ resource "azurerm_network_interface" "worker_nic" {
 
 resource "azurerm_virtual_machine" "worker_vm" {
   count                            = var.vm_worker_count
-  name                             = "${var.vm_name}-worker${count.index}"
+  name                             = "worker${count.index}"
   resource_group_name              = azurerm_resource_group.k8s_rg.name
   location                         = var.location
   network_interface_ids            = [azurerm_network_interface.worker_nic[count.index].id]
@@ -113,14 +113,14 @@ resource "azurerm_virtual_machine" "worker_vm" {
   }
 
   storage_os_disk {
-    name              = "${var.vm_name}-worker${count.index}-osdisk"
+    name              = "worker${count.index}-osdisk"
     create_option     = "FromImage"
     caching           = "ReadWrite"
     managed_disk_type = var.os_disk_type
   }
 
   os_profile {
-    computer_name  = "${var.vm_name}-worker${count.index}"
+    computer_name  = "worker${count.index}"
     admin_username = var.admin_username
   }
 

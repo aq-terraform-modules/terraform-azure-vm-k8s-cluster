@@ -6,10 +6,6 @@ variable "location" {
   description = "Location of resources"
 }
 
-variable "vm_name" {
-  description = "VM name"
-}
-
 variable "enable_accelerated_networking" {
   description = "Enable accelerated networking or not"
   type        = bool
