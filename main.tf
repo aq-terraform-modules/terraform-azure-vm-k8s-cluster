@@ -72,7 +72,7 @@ resource "azurerm_virtual_machine" "controller_vm" {
     ignore_changes = [tags, storage_image_reference, zones]
   }
 }
-/* 
+
 resource "azurerm_network_interface" "worker_nic" {
   count                         = var.vm_worker_count
   name                          = "worker-${count.index}-nic"
@@ -138,4 +138,4 @@ resource "azurerm_virtual_machine" "worker_vm" {
   lifecycle {
     ignore_changes = [tags, storage_image_reference]
   }
-} */
+}
