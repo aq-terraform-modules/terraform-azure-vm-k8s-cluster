@@ -175,3 +175,27 @@ resource "azurerm_lb" "kubernetes_lb" {
     public_ip_address_id = azurerm_public_ip.kubernetes_ingress_pip.id
   }
 }
+
+resource "azurerm_lb_probe" "kubernetes_api_health" {
+  resource_group_name = azurerm_resource_group.k8s_rg.name
+  loadbalancer_id     = azurerm_lb.kubernetes_lb.id
+  name                = "kubernetes-api-health"
+  protocol            = "Tcp"
+  port                = 6443
+}
+
+resource "azurerm_lb_probe" "kubernetes_ingress_http_health" {
+  resource_group_name = azurerm_resource_group.k8s_rg.name
+  loadbalancer_id     = azurerm_lb.kubernetes_lb.id
+  name                = "kubernetes-ingress-http-health"
+  protocol            = "Tcp"
+  port                = 80
+}
+
+resource "azurerm_lb_probe" "kubernetes_ingress_https_health" {
+  resource_group_name = azurerm_resource_group.k8s_rg.name
+  loadbalancer_id     = azurerm_lb.kubernetes_lb.id
+  name                = "kubernetes-ingress-https-health"
+  protocol            = "Tcp"
+  port                = 443
+}
