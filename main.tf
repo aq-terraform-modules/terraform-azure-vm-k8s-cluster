@@ -211,6 +211,7 @@ resource "azurerm_lb_rule" "kubernetes_api_lb_rule" {
   frontend_ip_configuration_name = "kubernetes-api"
   probe_id                       = azurerm_lb_probe.kubernetes_api_health.id
   idle_timeout_in_minutes        = 30
+  disable_outbound_snat          = false
 }
 
 # Load Balancer related to ingress
@@ -229,7 +230,6 @@ resource "azurerm_lb_probe" "kubernetes_ingress_http_health" {
   protocol            = "Tcp"
   port                = 80
 }
-
 
 resource "azurerm_lb_backend_address_pool" "kubernetes_worker_pool" {
   loadbalancer_id     = azurerm_lb.kubernetes_lb.id
