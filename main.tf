@@ -148,6 +148,7 @@ resource "azurerm_public_ip" "kubernetes_api_pip" {
   location            = var.location
   resource_group_name = azurerm_resource_group.k8s_rg.name
   allocation_method   = "Static"
+  sku                 = var.lb_sku
 }
 
 resource "azurerm_public_ip" "kubernetes_ingress_pip" {
@@ -155,6 +156,7 @@ resource "azurerm_public_ip" "kubernetes_ingress_pip" {
   location            = var.location
   resource_group_name = azurerm_resource_group.k8s_rg.name
   allocation_method   = "Static"
+  sku                 = var.lb_sku
 }
 
 resource "azurerm_lb" "kubernetes_lb" {
