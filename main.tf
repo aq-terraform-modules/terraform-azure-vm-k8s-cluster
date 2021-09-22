@@ -151,14 +151,6 @@ resource "azurerm_public_ip" "kubernetes_api_pip" {
   sku                 = var.lb_sku
 }
 
-resource "azurerm_public_ip" "kubernetes_ingress_pip" {
-  name                = "kubernetes-ingress-pip"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.k8s_rg.name
-  allocation_method   = "Static"
-  sku                 = var.lb_sku
-}
-
 resource "azurerm_lb" "kubernetes_lb" {
   name                = "kubernetes-lb"
   location            = var.location
@@ -182,22 +174,6 @@ resource "azurerm_lb_probe" "kubernetes_api_health" {
   name                = "kubernetes-api-health"
   protocol            = "Tcp"
   port                = 6443
-}
-
-resource "azurerm_lb_probe" "kubernetes_ingress_http_health" {
-  resource_group_name = azurerm_resource_group.k8s_rg.name
-  loadbalancer_id     = azurerm_lb.kubernetes_lb.id
-  name                = "kubernetes-ingress-http-health"
-  protocol            = "Tcp"
-  port                = 80
-}
-
-resource "azurerm_lb_probe" "kubernetes_ingress_https_health" {
-  resource_group_name = azurerm_resource_group.k8s_rg.name
-  loadbalancer_id     = azurerm_lb.kubernetes_lb.id
-  name                = "kubernetes-ingress-https-health"
-  protocol            = "Tcp"
-  port                = 443
 }
 
 resource "azurerm_lb_backend_address_pool" "kubernetes_controller_pool" {
@@ -235,4 +211,48 @@ resource "azurerm_lb_rule" "kubernetes_api_lb_rule" {
   frontend_ip_configuration_name = "kubernetes-api"
   probe_id                       = azurerm_lb_probe.kubernetes_api_health.id
   idle_timeout_in_minutes        = 30
+}
+
+# Load Balancer related to ingress
+resource "azurerm_public_ip" "kubernetes_ingress_pip" {
+  name                = "kubernetes-ingress-pip"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.k8s_rg.name
+  allocation_method   = "Static"
+  sku                 = var.lb_sku
+}
+
+resource "azurerm_lb_probe" "kubernetes_ingress_http_health" {
+  resource_group_name = azurerm_resource_group.k8s_rg.name
+  loadbalancer_id     = azurerm_lb.kubernetes_lb.id
+  name                = "kubernetes-ingress-http-health"
+  protocol            = "Tcp"
+  port                = 80
+}
+
+
+resource "azurerm_lb_backend_address_pool" "kubernetes_worker_pool" {
+  loadbalancer_id     = azurerm_lb.kubernetes_lb.id
+  name                = "kubernetes-worker-pool"
+}
+
+resource "azurerm_network_interface_backend_address_pool_association" "kubernetes_worker_pool_ass" {
+  count                   = length(azurerm_network_interface.worker_nic)
+  network_interface_id    = azurerm_network_interface.worker_nic[count.index].id
+  ip_configuration_name   = "worker-${count.index}-ipconf"
+  backend_address_pool_id = azurerm_lb_backend_address_pool.kubernetes_worker_pool.id
+  depends_on              = [azurerm_network_interface.worker_nic[count.index], azurerm_lb_backend_address_pool.kubernetes_worker_pool]
+}
+
+resource "azurerm_lb_outbound_rule" "kubernetes_worker_outbound" {
+  resource_group_name     = azurerm_resource_group.k8s_rg.name
+  loadbalancer_id         = azurerm_lb.kubernetes_lb.id
+  name                    = "kubernetes-worker-outbound"
+  protocol                = "All"
+  backend_address_pool_id = azurerm_lb_backend_address_pool.kubernetes_worker_pool.id
+  enable_tcp_reset        = false
+
+  frontend_ip_configuration {
+    name = "kubernetes-ingress"
+  }
 }
