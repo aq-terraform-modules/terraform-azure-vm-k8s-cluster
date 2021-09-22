@@ -199,3 +199,16 @@ resource "azurerm_lb_probe" "kubernetes_ingress_https_health" {
   protocol            = "Tcp"
   port                = 443
 }
+
+resource "azurerm_lb_backend_address_pool" "kubernetes_controller_pool" {
+  resource_group_name = azurerm_resource_group.k8s_rg.name
+  loadbalancer_id     = azurerm_lb.kubernetes_lb.id
+  name                = "kubernetes-controller-pool"
+}
+
+resource "azurerm_network_interface_backend_address_pool_association" "kubernetes_controller_pool_ass" {
+  network_interface_id    = azurerm_network_interface.controller_nic.id
+  ip_configuration_name   = "kubernetes-controller-pool-ass"
+  backend_address_pool_id = azurerm_lb_backend_address_pool.kubernetes_controller_pool.id
+  depends_on              = [azurerm_network_interface.controller_nic, azurerm_lb_backend_address_pool.examkubernetes_controller_poolple_c]
+}
