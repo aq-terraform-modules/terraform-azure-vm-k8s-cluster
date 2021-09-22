@@ -211,7 +211,7 @@ resource "azurerm_lb_rule" "kubernetes_api_lb_rule" {
   frontend_ip_configuration_name = "kubernetes-api"
   probe_id                       = azurerm_lb_probe.kubernetes_api_health.id
   idle_timeout_in_minutes        = 30
-  disable_outbound_snat          = false
+  disable_outbound_snat          = true
 }
 
 # Load Balancer related to ingress
