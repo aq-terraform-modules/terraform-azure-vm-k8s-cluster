@@ -211,3 +211,16 @@ resource "azurerm_network_interface_backend_address_pool_association" "kubernete
   backend_address_pool_id = azurerm_lb_backend_address_pool.kubernetes_controller_pool.id
   depends_on              = [azurerm_network_interface.controller_nic, azurerm_lb_backend_address_pool.kubernetes_controller_pool]
 }
+
+resource "azurerm_lb_outbound_rule" "kubernetes_controller_outbound" {
+  resource_group_name     = azurerm_resource_group.k8s_rg.name
+  loadbalancer_id         = azurerm_lb.kubernetes_lb.id
+  name                    = "kubernetes-controller-outbound"
+  protocol                = "All"
+  backend_address_pool_id = azurerm_lb_backend_address_pool.kubernetes_controller_pool.id
+  enable_tcp_reset        = "False"
+
+  frontend_ip_configuration {
+    name = "kubernetes-api"
+  }
+}
