@@ -241,7 +241,7 @@ resource "azurerm_network_interface_backend_address_pool_association" "kubernete
   network_interface_id    = azurerm_network_interface.worker_nic[count.index].id
   ip_configuration_name   = "worker-${count.index}-ipconf"
   backend_address_pool_id = azurerm_lb_backend_address_pool.kubernetes_worker_pool.id
-  depends_on              = [azurerm_network_interface.worker_nic[count.index], azurerm_lb_backend_address_pool.kubernetes_worker_pool]
+  depends_on              = [azurerm_network_interface.worker_nic, azurerm_lb_backend_address_pool.kubernetes_worker_pool]
 }
 
 resource "azurerm_lb_outbound_rule" "kubernetes_worker_outbound" {
