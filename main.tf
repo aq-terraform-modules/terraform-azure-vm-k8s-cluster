@@ -208,6 +208,7 @@ resource "azurerm_lb_rule" "kubernetes_api_lb_rule" {
   protocol                       = "Tcp"
   frontend_port                  = 6443
   backend_port                   = 6443
+  backend_address_pool_id        = azurerm_lb_backend_address_pool.kubernetes_controller_pool.id
   frontend_ip_configuration_name = "kubernetes-api"
   probe_id                       = azurerm_lb_probe.kubernetes_api_health.id
   idle_timeout_in_minutes        = 30
