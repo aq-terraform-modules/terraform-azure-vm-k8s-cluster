@@ -224,3 +224,15 @@ resource "azurerm_lb_outbound_rule" "kubernetes_controller_outbound" {
     name = "kubernetes-api"
   }
 }
+
+resource "azurerm_lb_rule" "kubernetes_api_lb_rule" {
+  resource_group_name            = azurerm_resource_group.k8s_rg.name
+  loadbalancer_id                = azurerm_lb.kubernetes_lb.id
+  name                           = "kubernetes-api-lb-rule"
+  protocol                       = "Tcp"
+  frontend_port                  = 6443
+  backend_port                   = 6443
+  frontend_ip_configuration_name = "kubernetes-api"
+  probe_id                       = azurerm_lb_probe.kubernetes_api_health.id
+  idle_timeout_in_minutes        = 30
+}
