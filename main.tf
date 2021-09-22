@@ -14,6 +14,7 @@ resource "azurerm_network_interface" "controller_nic" {
   location                      = var.location
   internal_dns_name_label       = "controller"
   enable_accelerated_networking = var.enable_accelerated_networking
+  enable_ip_forwarding          = true
 
   ip_configuration {
     name                          = "controller-ipconf"
@@ -80,6 +81,7 @@ resource "azurerm_network_interface" "worker_nic" {
   location                      = var.location
   internal_dns_name_label       = "worker-${count.index}"
   enable_accelerated_networking = var.enable_accelerated_networking
+  enable_ip_forwarding          = true
 
   ip_configuration {
     name                          = "worker-${count.index}-ipconf"
