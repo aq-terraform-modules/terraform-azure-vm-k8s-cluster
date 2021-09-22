@@ -210,5 +210,5 @@ resource "azurerm_network_interface_backend_address_pool_association" "kubernete
   network_interface_id    = azurerm_network_interface.controller_nic.id
   ip_configuration_name   = "kubernetes-controller-pool-ass"
   backend_address_pool_id = azurerm_lb_backend_address_pool.kubernetes_controller_pool.id
-  depends_on              = [azurerm_network_interface.controller_nic, azurerm_lb_backend_address_pool.examkubernetes_controller_poolple_c]
+  depends_on              = [azurerm_network_interface.controller_nic, azurerm_lb_backend_address_pool.kubernetes_controller_pool]
 }
