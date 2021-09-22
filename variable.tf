@@ -80,3 +80,9 @@ variable "zones" {
   type        = list(any)
   default     = []
 }
+
+variable "lb_sku" {
+  description = "SKU for Load Balancer"
+  type        = string
+  default     = "Standard"
+}

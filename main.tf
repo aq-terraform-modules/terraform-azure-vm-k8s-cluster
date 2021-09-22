@@ -141,3 +141,35 @@ resource "azurerm_virtual_machine" "worker_vm" {
     ignore_changes = [tags, storage_image_reference]
   }
 }
+
+# Load Balancer
+resource "azurerm_public_ip" "kubernetes_api_pip" {
+  name                = "kubernetes-api-pip"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.k8s_rg.name
+  allocation_method   = "Static"
+}
+
+resource "azurerm_public_ip" "kubernetes_ingress_pip" {
+  name                = "kubernetes-ingress-pip"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.k8s_rg.name
+  allocation_method   = "Static"
+}
+
+resource "azurerm_lb" "kubernetes_lb" {
+  name                = "kubernetes-lb"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.k8s_rg.name
+  sku                 = var.lb_sku
+
+  frontend_ip_configuration {
+    name                 = "kubernetes-api"
+    public_ip_address_id = azurerm_public_ip.kubernetes_api_pip.id
+  }
+
+  frontend_ip_configuration {
+    name                 = "kubernetes-ingress"
+    public_ip_address_id = azurerm_public_ip.kubernetes_ingress_pip.id
+  }
+}
