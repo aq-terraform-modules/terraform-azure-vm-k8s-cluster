@@ -218,7 +218,7 @@ resource "azurerm_lb_outbound_rule" "kubernetes_controller_outbound" {
   name                    = "kubernetes-controller-outbound"
   protocol                = "All"
   backend_address_pool_id = azurerm_lb_backend_address_pool.kubernetes_controller_pool.id
-  enable_tcp_reset        = "False"
+  enable_tcp_reset        = false
 
   frontend_ip_configuration {
     name = "kubernetes-api"
