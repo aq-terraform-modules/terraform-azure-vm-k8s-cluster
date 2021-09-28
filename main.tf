@@ -284,7 +284,7 @@ resource "azurerm_lb_rule" "kubernetes_ingress_https_lb_rule" {
   loadbalancer_id                = azurerm_lb.kubernetes_lb.id
   name                           = "kubernetes-ingress-https-rule"
   protocol                       = "Tcp"
-  frontend_port                  = 80
+  frontend_port                  = 443
   backend_port                   = var.https_node_port
   backend_address_pool_id        = azurerm_lb_backend_address_pool.kubernetes_worker_pool.id
   frontend_ip_configuration_name = "kubernetes-ingress"
