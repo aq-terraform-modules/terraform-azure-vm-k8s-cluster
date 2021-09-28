@@ -86,3 +86,13 @@ variable "lb_sku" {
   type        = string
   default     = "Standard"
 }
+
+variable "http_node_port" {
+  description = "HTTP port on each node to create health probe"
+  type = number
+}
+
+variable "https_node_port" {
+  description = "HTTPS port on each node to create health probe"
+  type = number
+}

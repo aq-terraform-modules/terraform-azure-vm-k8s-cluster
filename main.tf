@@ -229,7 +229,15 @@ resource "azurerm_lb_probe" "kubernetes_ingress_http_health" {
   loadbalancer_id     = azurerm_lb.kubernetes_lb.id
   name                = "kubernetes-ingress-http-health"
   protocol            = "Tcp"
-  port                = 80
+  port                = var.http_node_port
+}
+
+resource "azurerm_lb_probe" "kubernetes_ingress_https_health" {
+  resource_group_name = azurerm_resource_group.k8s_rg.name
+  loadbalancer_id     = azurerm_lb.kubernetes_lb.id
+  name                = "kubernetes-ingress-https-health"
+  protocol            = "Tcp"
+  port                = var.https_node_port
 }
 
 resource "azurerm_lb_backend_address_pool" "kubernetes_worker_pool" {
@@ -255,4 +263,32 @@ resource "azurerm_lb_outbound_rule" "kubernetes_worker_outbound" {
   frontend_ip_configuration {
     name = "kubernetes-ingress"
   }
+}
+
+resource "azurerm_lb_rule" "kubernetes_ingress_http_lb_rule" {
+  resource_group_name            = azurerm_resource_group.k8s_rg.name
+  loadbalancer_id                = azurerm_lb.kubernetes_lb.id
+  name                           = "kubernetes-ingress-http-rule"
+  protocol                       = "Tcp"
+  frontend_port                  = 80
+  backend_port                   = var.http_node_port
+  backend_address_pool_id        = azurerm_lb_backend_address_pool.kubernetes_worker_pool.id
+  frontend_ip_configuration_name = "kubernetes-ingress"
+  probe_id                       = azurerm_lb_probe.kubernetes_ingress_http_health.id
+  idle_timeout_in_minutes        = 30
+  disable_outbound_snat          = true
+}
+
+resource "azurerm_lb_rule" "kubernetes_ingress_https_lb_rule" {
+  resource_group_name            = azurerm_resource_group.k8s_rg.name
+  loadbalancer_id                = azurerm_lb.kubernetes_lb.id
+  name                           = "kubernetes-ingress-https-rule"
+  protocol                       = "Tcp"
+  frontend_port                  = 80
+  backend_port                   = var.https_node_port
+  backend_address_pool_id        = azurerm_lb_backend_address_pool.kubernetes_worker_pool.id
+  frontend_ip_configuration_name = "kubernetes-ingress"
+  probe_id                       = azurerm_lb_probe.kubernetes_ingress_https_health.id
+  idle_timeout_in_minutes        = 30
+  disable_outbound_snat          = true
 }
